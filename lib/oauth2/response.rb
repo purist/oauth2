@@ -76,6 +76,11 @@ module OAuth2
 
     # Determines the parser that will be used to supply the content of #parsed
     def parser
+      
+      if (options[:parse] == :automatic)     # it wasn't handling the :automatic option before this, must investigate furthur
+        return CONTENT_TYPES[content_type]
+      end
+    
       return options[:parse].to_sym if PARSERS.key?(options[:parse])
       CONTENT_TYPES[content_type]
     end

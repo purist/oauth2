@@ -33,7 +33,8 @@ module OAuth2
                   :connection_opts  => {},
                   :connection_build => block,
                   :max_redirects    => 5,
-                  :raise_errors     => true}.merge(opts)
+                  :raise_errors     => true,
+                  :parse            => :automatic}.merge(opts)
       @options[:connection_opts][:ssl] = ssl if ssl
     end
 
@@ -117,7 +118,7 @@ module OAuth2
     # @param [Hash] params a Hash of params for the token endpoint
     # @return [AccessToken] the initalized AccessToken
     def get_token(params)
-      opts = {:raise_errors => true, :parse => params.delete(:parse)}
+      opts = {:raise_errors => options.delete(:raise_errors), :parse => options.delete(:parse)}.merge( params )
       if options[:token_method] == :post
         opts[:body] = params
         opts[:headers] =  {'Content-Type' => 'application/x-www-form-urlencoded'}
@@ -128,7 +129,7 @@ module OAuth2
       raise Error.new(response) unless response.parsed.is_a?(Hash) && response.parsed['access_token']
       AccessToken.from_hash(self, response.parsed)
     end
-
+    
     # The Authorization Code strategy
     #
     # @see http://tools.ietf.org/html/draft-ietf-oauth-v2-15#section-4.1

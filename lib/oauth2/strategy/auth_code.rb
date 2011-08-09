@@ -27,6 +27,7 @@ module OAuth2
         params = {'grant_type' => 'authorization_code', 'code' => code}.merge(client_params).merge(params)
         @client.get_token(params)
       end
+      
     end
   end
 end
